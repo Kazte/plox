@@ -9,7 +9,7 @@ class Lox:
         self.main(sys.argv)
 
     def _show_banner(self):
-        version = "0.0.0"
+        version = "0.0.1"
         banner = f"""
 ██████╗ ██╗      ██████╗ ██╗  ██╗
 ██╔══██╗██║     ██╔═══██╗╚██╗██╔╝
@@ -17,9 +17,10 @@ class Lox:
 ██╔═══╝ ██║     ██║   ██║ ██╔██╗
 ██║     ███████╗╚██████╔╝██╔╝ ██╗
 ╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
+        made by @kazte | {version}
         """
 
-        # print(banner)
+        print(banner)
 
     def _run(self, source: str):
         pass
@@ -51,7 +52,7 @@ class Lox:
             sys.exit(1)
 
     def main(self, args: list[str]):
-        self._show_banner()
+        # self._show_banner()
 
         if len(args) > 2:
             print("Usage: plox [script]")
@@ -60,6 +61,7 @@ class Lox:
             self._run_file(args[1])
         else:
             # _run_prompt()
+            self._show_banner()
             pass
 
 
