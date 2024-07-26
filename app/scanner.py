@@ -70,8 +70,10 @@ class Scanner:
                 self._add_token(
                     TokenType.GREATER_EQUAL if self._match("=") else TokenType.GREATER
                 )
+            case '"':
+                self._string()
             case "\n":
-                self.line += 1
+                self._add_line()
             case " ":
                 pass
             case "\r":
@@ -79,7 +81,41 @@ class Scanner:
             case "\t":
                 pass
             case _:
-                lox.error(self.line, f"Unexpected character: {c}")
+                if self._is_digit(c):
+                    self._number()
+                else:
+                    lox.error(self.line, f"Unexpected character: {c}")
+
+    def _string(self):
+        while self._peek() != '"' and not self._is_at_end():
+            if self._peek() == "\n":
+                self._add_line()
+            self._advance()
+
+        if self._is_at_end():
+            lox.error(self.line, "Unterminated string.")
+            return
+
+        self._advance()
+
+        value = self.source[self.start + 1 : self.current - 1]
+        self._add_token(TokenType.STRING, value)
+
+    def _number(self):
+        while self._is_digit(self._peek()):
+            self._advance()
+
+        if self._peek() == "." and self._is_digit(self._peek_next()):
+            # consume the "."
+            self._advance()
+
+            while self._is_digit(self._peek()):
+                self._advance()
+
+        self._add_token(TokenType.NUMBER, float(self.source[self.start : self.current]))
+
+    def _is_digit(self, c: chr) -> bool:
+        return c >= "0" and c <= "9"
 
     def _is_at_end(self) -> bool:
         return self.current >= len(self.source)
@@ -108,3 +144,11 @@ class Scanner:
         if self._is_at_end():
             return "\0"
         return self.source[self.current]
+
+    def _peek_next(self) -> chr:
+        if self.current + 1 >= len(self.source):
+            return "\0"
+        return self.source[self.current + 1]
+
+    def _add_line(self):
+        self.line += 1
