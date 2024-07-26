@@ -44,6 +44,14 @@ class Scanner:
                 self._add_token(TokenType.PLUS)
             case "*":
                 self._add_token(TokenType.STAR)
+            case "/":
+                if self._match("/"):
+                    # a comment goes until the end of the line
+                    while self._peek() != "\n" and not self._is_at_end():
+                        self._advance()
+                else:
+                    self._add_token(TokenType.SLASH)
+
             case ";":
                 self._add_token(TokenType.SEMICOLON)
             case "!":
@@ -95,3 +103,8 @@ class Scanner:
 
         self.current += 1
         return True
+
+    def _peek(self) -> chr:
+        if self._is_at_end():
+            return "\0"
+        return self.source[self.current]
