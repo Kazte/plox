@@ -42,13 +42,26 @@ class Scanner:
                 self._add_token(TokenType.MINUS)
             case "+":
                 self._add_token(TokenType.PLUS)
+            case "*":
+                self._add_token(TokenType.STAR)
             case ";":
                 self._add_token(TokenType.SEMICOLON)
             case "!":
                 self._add_token(
                     TokenType.BANG_EQUAL if self._match("=") else TokenType.BANG
                 )
-
+            case "=":
+                self._add_token(
+                    TokenType.EQUAL_EQUAL if self._match("=") else TokenType.EQUAL
+                )
+            case "<":
+                self._add_token(
+                    TokenType.LESS_EQUAL if self._match("=") else TokenType.LESS
+                )
+            case ">":
+                self._add_token(
+                    TokenType.GREATER_EQUAL if self._match("=") else TokenType.GREATER
+                )
             case "\n":
                 self.line += 1
             case " ":
